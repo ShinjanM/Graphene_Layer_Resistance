@@ -191,7 +191,9 @@ for i in range(row2):
 
 plt.matshow(V1,interpolation='spline36')
 plt.colorbar()
+plt.title("Voltage Distribution Layer 1")
 plt.show()
 plt.matshow(V2.T,interpolation='spline36',origin='lower')
 plt.colorbar()
+plt.title("Voltage Distribution Layer 2")
 plt.show()
