@@ -1,1 +1,21 @@
-The resistance is 2000.0000544442726 Ohms 
+--------------------------------------------- 
+| Layer 1: 10 X 40
+| Layer 2: 15 X 50
+| R_top: 10 Ohms 	 R_bot: 20 	 R_cross: 10 Ohms
+| Convergence Threshold:  1e-06
+--------------------------------------------- 
+
+Step 500 with convergence delta = 0.6725467659756329
+Step 1000 with convergence delta = 0.15031544103473873
+Step 1500 with convergence delta = 0.04119637161904659
+Step 2000 with convergence delta = 0.012001343227444096
+Step 2500 with convergence delta = 0.0035412000110002784
+Step 3000 with convergence delta = 0.0010473766684291203
+Step 3500 with convergence delta = 0.0003099114935105479
+Step 4000 with convergence delta = 9.170727882230889e-05
+Step 4500 with convergence delta = 2.7137836466330223e-05
+Step 5000 with convergence delta = 8.030591177279889e-06
+Step 5500 with convergence delta = 2.3764022715130895e-06
+Step 5856 with convergence delta = 9.986073440867993e-07 has converged
+
+The resistance of the network is 26.91441 Ohms.

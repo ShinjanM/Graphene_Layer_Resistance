@@ -3,6 +3,8 @@ import matplotlib
 matplotlib.use('tkagg')
 import matplotlib.pyplot as plt
 
+CONVERGENCE_THRESHOLD = 1e-6
+
 class Fixed:
     FREE = 0
     A = 1
@@ -15,9 +17,10 @@ class Node:
         self.fixed = f
 
 def set_boundary(grid1,grid2):
-    for j in range(20):
+    for j in range(10):
         grid1[j][0] = Node(1.0, Fixed.A)
-        grid2[j][0] = Node(-1.0, Fixed.B)
+    for j in range(15):
+        grid2[j][0] = Node(0.0, Fixed.B)
 
 
 def find_cross_boundaries(row1, col1, row2, col2):
@@ -112,9 +115,9 @@ def current_grid(grid1,grid2,cross_boundary,R_bot,R_top,R_cross):
             if n<col1-1: current1[m][n] += (grid1[m][n].voltage - grid1[m][n+1].voltage)/R_top
             if ((n>=cross_boundary[0]) and (n<=cross_boundary[1])):
                 current1[m][n] += (grid1[m][n].voltage - grid2[n-cross_boundary[0]][cross_boundary[3]-m].voltage)/R_cross
-    plt.matshow(current1, interpolation='spline36',cmap='inferno')
-    plt.colorbar()
-    plt.show()
+#    plt.matshow(current1, interpolation='spline36',cmap='inferno')
+#    plt.colorbar()
+#    plt.show()
     for m in range(row2):
         for n in range(col2):
             if m!=0: current2[m][n] += (grid2[m][n].voltage - grid2[m-1][n].voltage)/R_bot
@@ -123,9 +126,9 @@ def current_grid(grid1,grid2,cross_boundary,R_bot,R_top,R_cross):
             if n<col2-1: current2[m][n] += (grid2[m][n].voltage - grid2[m][n+1].voltage)/R_bot
             if ((n>=cross_boundary[2]) and (n<=cross_boundary[3])):
                 current2[m][n] += (grid2[m][n].voltage - grid1[cross_boundary[3]-n][cross_boundary[0]+m].voltage)/R_cross
-    plt.matshow(current2.T,interpolation='spline36', cmap='inferno',origin='lower')
-    plt.colorbar()
-    plt.show()
+#    plt.matshow(current2.T,interpolation='spline36', cmap='inferno',origin='lower')
+#    plt.colorbar()
+#    plt.show()
     return current1, current2
 
 def iterations(number_of_iterations, grid1, grid2, cross_boundary, R_top, R_bot, R_cross):
@@ -143,6 +146,9 @@ def iterations(number_of_iterations, grid1, grid2, cross_boundary, R_top, R_bot,
                 diff += V_mnp(m,n,p,grid1,grid2,row1,col1,row2,col2,R_top,R_bot,R_cross,cross_boundary)
         if (i+1)%500==0:
             print("Step {} with convergence delta = {}".format(i+1,diff))
+        if diff<CONVERGENCE_THRESHOLD:
+            print("Step {} with convergence delta = {} has converged".format(i+1,diff))
+            break
     return
 
 
@@ -159,28 +165,31 @@ def resistance(num_iter, grid1, grid2, cross, R_top, R_bot, R_cross):
             if grid2[i][j].fixed == Fixed.A: curA += I2[i][j]
             if grid2[i][j].fixed == Fixed.B: curB += I2[i][j]
     cur = curA - curB
-    res = 2/cur
+    res = 1/cur
     return res
 
 
-row1 = 20
-col1 = 80 
-row2 = 20
-col2 = 80
+row1 = 10
+col1 = 40 
+row2 = 15
+col2 = 50
 
-R_top   = 1000
-R_bot   = 2000
-R_cross = 1000
+R_top   = 10
+R_bot   = 20
+R_cross = 10
 
+print("--------------------------------------------- ")
+print("| Layer 1: {} X {}".format(row1,col1))
+print("| Layer 2: {} X {}".format(row2,col2))
+print("| R_top: {} Ohms \t R_bot: {} \t R_cross: {} Ohms".format(R_top,R_bot,R_cross))
+print("| Convergence Threshold: ", CONVERGENCE_THRESHOLD)
+print("--------------------------------------------- \n")
 layer1 = [[Node() for i in range(col1)] for j in range(row1)]
-print(np.shape(layer1))
 layer2 = [[Node() for i in range(col2)] for j in range(row2)]
-print(np.shape(layer2))
 set_boundary(layer1,layer2)
 cross = find_cross_boundaries(row1, col1, row2, col2)
-print(cross)
-final_resistance = resistance(20000, layer1, layer2, cross, R_top, R_bot, R_cross)
-print(final_resistance)
+final_resistance = resistance(10000, layer1, layer2, cross, R_top, R_bot, R_cross)
+print("\nThe resistance of the network is %.5f Ohms."%final_resistance)
 V1, V2 = np.empty((row1,col1)), np.empty((row2,col2))
 for i in range(row1):
     for j in range(col1):
@@ -189,11 +198,18 @@ for i in range(row2):
     for j in range(col2):
         V2[i][j] = layer2[i][j].voltage
 
-plt.matshow(V1,interpolation='spline36')
+X1 = [i for i in range(col1)]
+Y1 = [i for i in range((col2-row1)//2+row1,(col2-row1)//2,-1)]
+x1,y1 = np.meshgrid(X1,Y1)
+#X2 = [i for i in range((col1-row2)//2,(col1-row2)//2+row2)]
+X2 = [i for i in range(col1,col1+row2)]
+Y2 = [i for i in range(col2)]
+x2,y2 = np.meshgrid(X2,Y2)
+
+levels = np.arange(-0.005,1.015,0.005)+0.005
+plt.contourf(x1,y1,V1,levels,alpha=0.8,cmap='twilight_shifted')
+plt.contourf(x2,y2,V2.T,levels,alpha=0.8,cmap='twilight_shifted')
 plt.colorbar()
-plt.title("Voltage Distribution Layer 1")
-plt.show()
-plt.matshow(V2.T,interpolation='spline36',origin='lower')
-plt.colorbar()
-plt.title("Voltage Distribution Layer 2")
-plt.show()
+plt.axis('off')
+plt.title("Voltage Distribution")
+plt.savefig('Voltage_Distribution.png')
