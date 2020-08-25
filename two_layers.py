@@ -15,8 +15,11 @@ class Node:
         self.fixed = f
 
 def set_boundary(grid1,grid2):
-    grid1[0][0] = Node(1.0, Fixed.A)
-    grid2[0][0] = Node(-1.0, Fixed.B)
+    for j in range(0,19):
+        grid1[j][0] = Node(1.0, Fixed.A)
+        grid2[j][0] = Node(-1.0, Fixed.B)
+        grid1[j][39] = Node(1.0, Fixed.A)
+        grid2[j][39] = Node(-1.0, Fixed.B)
 
 def V_mnp(m,n,p,grid1,grid2,row1,col1,row2,col2,R_top,R_bot,R_cross,cross_boundary):
     """
@@ -77,7 +80,6 @@ def V_mnp(m,n,p,grid1,grid2,row1,col1,row2,col2,R_top,R_bot,R_cross,cross_bounda
             if ((n>=cross_boundary[2]) and (n<=cross_boundary[3])):
                 layer1_position_1 = cross_boundary[3] - n
                 layer1_position_2 = m + cross_boundary[0] - 1
-                print(layer1_position_1, layer1_position_2)
                 Vmnp += grid1[layer1_position_1][layer1_position_2].voltage / R_cross
                 R_inv += R_cross
             Vmnp = Vmnp/R_inv
@@ -101,6 +103,9 @@ def current_grid(grid1,grid2,cross_boundary,R_bot,R_top,R_cross):
             if n<col1-1: current1[m][n] += (grid1[m][n].voltage - grid1[m][n+1].voltage)/R_top
             if ((n>=cross_boundary[0]) and (n<=cross_boundary[1])):
                 current1[m][n] += (grid1[m][n].voltage - grid2[n-cross_boundary[0]][cross_boundary[3]-m].voltage)/R_cross
+    plt.matshow(current1, interpolation='spline36',cmap='inferno')
+    plt.colorbar()
+    plt.show()
     for m in range(row2):
         for n in range(col2):
             if m!=0: current2[m][n] += (grid2[m][n].voltage - grid2[m-1][n].voltage)/R_bot
@@ -109,6 +114,9 @@ def current_grid(grid1,grid2,cross_boundary,R_bot,R_top,R_cross):
             if n<col2-1: current2[m][n] += (grid2[m][n].voltage - grid2[m][n+1].voltage)/R_bot
             if ((n>=cross_boundary[2]) and (n<=cross_boundary[3])):
                 current2[m][n] += (grid2[m][n].voltage - grid1[cross_boundary[3]-n][cross_boundary[0]+m].voltage)/R_cross
+    plt.matshow(current2.T,interpolation='spline36', cmap='inferno',origin='lower')
+    plt.colorbar()
+    plt.show()
     return current1, current2
 
 
@@ -120,23 +128,13 @@ def iterations(number_of_iterations, grid1, grid2, cross_boundary, R_top, R_bot,
         p = 0
         for m in range(row1):
             for n in range(col1):
-                if (m+n)%2 == 0:
-                    diff += V_mnp(m,n,p,grid1,grid2,row1,col1,row2,col2,R_top,R_bot,R_cross,cross_boundary)
-        for m in range(row1):
-            for n in range(col1):
-                if (m+n)%2 != 0:
-                    diff += V_mnp(m,n,p,grid1,grid2,row1,col1,row2,col2,R_top,R_bot,R_cross,cross_boundary)
+                diff += V_mnp(m,n,p,grid1,grid2,row1,col1,row2,col2,R_top,R_bot,R_cross,cross_boundary)
         p = 1
         for m in range(row2):
             for n in range(col2):
-                if (m+n)%2 == 0:
-                    diff += V_mnp(m,n,p,grid1,grid2,row1,col1,row2,col2,R_top,R_bot,R_cross,cross_boundary)
-        for m in range(row2):
-            for n in range(col2):
-                if (m+n)%2 != 0:
-                    diff += V_mnp(m,n,p,grid1,grid2,row1,col1,row2,col2,R_top,R_bot,R_cross,cross_boundary)
-    if (i+1)%100==0:
-        print("Step {} with diff = {1:.8f}%".format(i,diff))
+                diff += V_mnp(m,n,p,grid1,grid2,row1,col1,row2,col2,R_top,R_bot,R_cross,cross_boundary)
+        if (i+1)%500==0:
+            print("Step {} with diff = {}".format(i+1,diff))
     return
 
 def resistance(num_iter, grid1, grid2, cross, R_top, R_bot, R_cross):
@@ -145,12 +143,12 @@ def resistance(num_iter, grid1, grid2, cross, R_top, R_bot, R_cross):
     curA, curB = 0.0, 0.0
     for i in range(np.shape(grid1)[0]):
         for j in range(np.shape(grid1)[1]):
-            if grid1[i][j].fixed == Fixed.A: curA += current[i][j]
-            if grid1[i][j].fixed == Fixed.B: curB += current[i][j]
+            if grid1[i][j].fixed == Fixed.A: curA += I1[i][j]
+            if grid1[i][j].fixed == Fixed.B: curB += I1[i][j]
     for i in range(np.shape(grid2)[0]):
         for j in range(np.shape(grid2)[1]):
-            if grid2[i][j].fixed == Fixed.A: curA += current[i][j]
-            if grid2[i][j].fixed == Fixed.B: curB += current[i][j]
+            if grid2[i][j].fixed == Fixed.A: curA += I2[i][j]
+            if grid2[i][j].fixed == Fixed.B: curB += I2[i][j]
     cur = curA - curB
     res = 2/cur
     return res
@@ -166,19 +164,36 @@ def find_cross(row1, col1, row2, col2):
         
 
 
-row1 = 2
-col1 = 4 
-row2 = 1
-col2 = 4
+row1 = 20
+col1 = 40 
+row2 = 20
+col2 = 40
 
-R_top   = 1
-R_bot   = 2
-R_cross = 1
+R_top   = 1000
+R_bot   = 2000
+R_cross = 1000
 
 layer1 = [[Node() for i in range(col1)] for j in range(row1)]
-layer2 = [[Node() for i in range(col2)] for j in range(col2)]
+print(np.shape(layer1))
+layer2 = [[Node() for i in range(col2)] for j in range(row2)]
+print(np.shape(layer2))
 
 set_boundary(layer1,layer2)
-cross = [2,2,1,2]
+cross = find_cross(row1, col1, row2, col2)
 print(cross)
 final_resistance = resistance(10000, layer1, layer2, cross, R_top, R_bot, R_cross)
+print(final_resistance)
+V1, V2 = np.empty((row1,col1)), np.empty((row2,col2))
+for i in range(row1):
+    for j in range(col1):
+        V1[i][j] = layer1[i][j].voltage
+for i in range(row2):
+    for j in range(col2):
+        V2[i][j] = layer2[i][j].voltage
+
+plt.matshow(V1,interpolation='spline36')
+plt.colorbar()
+plt.show()
+plt.matshow(V2.T,interpolation='spline36',origin='lower')
+plt.colorbar()
+plt.show()
