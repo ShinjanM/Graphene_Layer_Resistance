@@ -66,7 +66,7 @@ def V_mnp(m,n,p,grid1,grid2,row1,col1,row2,col2,R_top,R_bot,R_cross,cross_bounda
                 layer2_position_1 = n - cross_boundary[0]
                 layer2_position_2 = cross_boundary[3] - m
                 Vmnp += grid2[layer2_position_1][layer2_position_2].voltage / R_cross
-                R_inv += R_cross
+                R_inv += 1/R_cross
             Vmnp = Vmnp/R_inv
             diff = abs(grid1[m][n].voltage - Vmnp)
             grid1[m][n].voltage = Vmnp
@@ -90,7 +90,7 @@ def V_mnp(m,n,p,grid1,grid2,row1,col1,row2,col2,R_top,R_bot,R_cross,cross_bounda
                 layer1_position_1 = cross_boundary[3] - n
                 layer1_position_2 = m + cross_boundary[0] - 1
                 Vmnp += grid1[layer1_position_1][layer1_position_2].voltage / R_cross
-                R_inv += R_cross
+                R_inv += 1/R_cross
             Vmnp = Vmnp/R_inv
             diff = abs(grid2[m][n].voltage - Vmnp)
             grid2[m][n].voltage = Vmnp
