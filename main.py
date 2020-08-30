@@ -3,7 +3,7 @@ import matplotlib
 matplotlib.use('tkagg')
 import matplotlib.pyplot as plt
 
-CONVERGENCE_THRESHOLD = 1e-8
+CONVERGENCE_THRESHOLD = 1e-16
 
 class Fixed:
     FREE = 0
@@ -146,7 +146,7 @@ def iterations(number_of_iterations, grid1, grid2, cross_boundary, R_top, R_bot,
         for m in range(row2):
             for n in range(col2):
                 diff += V_mnp(m,n,p,grid1,grid2,row1,col1,row2,col2,R_top,R_bot,R_cross,cross_boundary)
-        if (i+1)%1000==0:
+        if (i+1)%2500==0:
             print("Step {} with convergence delta = {}".format(i+1,diff))
         if diff<CONVERGENCE_THRESHOLD:
             print("Step {} with convergence delta = {} has converged".format(i+1,diff))
@@ -231,4 +231,4 @@ plt.text(34.5,14,r'V$^+$', fontsize=25)
 plt.text(49, 30.3, r'V$^-$', fontsize=25)
 #plt.title("Voltage Distribution")
 #plt.show()
-plt.savefig('Voltage_Distribution.png')
+plt.savefig('Voltage_Distribution_3.png')
