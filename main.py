@@ -21,8 +21,8 @@ class Node:
 def set_boundary(grid1,grid2):
     grid1[8][0] = Node(10.0, Fixed.A)
     grid2[7][0] = Node(0.0, Fixed.B)
-    grid1[3][34] = Node(0.0, Fixed.C)
-    grid2[3][29] = Node(0.0, Fixed.D)
+    grid1[9][6] = Node(0.0, Fixed.C)
+    grid2[0][4] = Node(0.0, Fixed.D)
 
 
 def find_cross_boundaries(row1, col1, row2, col2):
@@ -227,8 +227,8 @@ plt.colorbar()
 plt.axis('off')
 plt.text(-5.3, 16.5, r'I$^+$', fontsize=25)
 plt.text(46.5, -2.5, r'I$^-$', fontsize=25)
-plt.text(34.5,14,r'V$^+$', fontsize=25)
-plt.text(49, 30.3, r'V$^-$', fontsize=25)
+plt.text(5.5,8,r'V$^+$', fontsize=25)
+plt.text(36, 4, r'V$^-$', fontsize=25)
 #plt.title("Voltage Distribution")
-#plt.show()
-plt.savefig('Voltage_Distribution_3.png')
+plt.show()
+plt.savefig('Voltage_Distribution_quasi4.png')
