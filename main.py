@@ -3,7 +3,7 @@ import matplotlib
 matplotlib.use('tkagg')
 import matplotlib.pyplot as plt
 
-CONVERGENCE_THRESHOLD = 1e-6
+CONVERGENCE_THRESHOLD = 1e-20
 
 class Fixed:
     FREE = 0
@@ -17,9 +17,9 @@ class Node:
         self.fixed = f
 
 def set_boundary(grid1,grid2):
-    for j in range(10):
-        grid1[j][0] = Node(1.0, Fixed.A)
-    for j in range(15):
+    for j in range(2):
+        grid1[j][0] = Node(10.0, Fixed.A)
+    for j in range(1):
         grid2[j][0] = Node(0.0, Fixed.B)
 
 
@@ -66,8 +66,8 @@ def V_mnp(m,n,p,grid1,grid2,row1,col1,row2,col2,R_top,R_bot,R_cross,cross_bounda
                 Vmnp += grid1[m][n+1].voltage /R_top
                 R_inv += 1/R_top
             if ((n>=cross_boundary[0]) and (n<=cross_boundary[1])):
-                layer2_position_1 = n - cross_boundary[0]
-                layer2_position_2 = cross_boundary[3] - m
+                layer2_position_1 = n - cross_boundary[0]  
+                layer2_position_2 = cross_boundary[3] - m 
                 Vmnp += grid2[layer2_position_1][layer2_position_2].voltage / R_cross
                 R_inv += 1/R_cross
             Vmnp = Vmnp/R_inv
@@ -90,8 +90,8 @@ def V_mnp(m,n,p,grid1,grid2,row1,col1,row2,col2,R_top,R_bot,R_cross,cross_bounda
                 Vmnp += grid2[m][n+1].voltage /R_bot
                 R_inv += 1/R_bot
             if ((n>=cross_boundary[2]) and (n<=cross_boundary[3])):
-                layer1_position_1 = cross_boundary[3] - n
-                layer1_position_2 = m + cross_boundary[0] - 1
+                layer1_position_1 = cross_boundary[3] - n   
+                layer1_position_2 = m + cross_boundary[0]  
                 Vmnp += grid1[layer1_position_1][layer1_position_2].voltage / R_cross
                 R_inv += 1/R_cross
             Vmnp = Vmnp/R_inv
@@ -165,17 +165,17 @@ def resistance(num_iter, grid1, grid2, cross, R_top, R_bot, R_cross):
             if grid2[i][j].fixed == Fixed.A: curA += I2[i][j]
             if grid2[i][j].fixed == Fixed.B: curB += I2[i][j]
     cur = curA - curB
-    res = 1/cur
-    return res
+    res = 10/cur
+    return res, curA, curB
 
 
-row1 = 10
-col1 = 40 
-row2 = 15
-col2 = 50
+row1 = 5
+col1 = 10 
+row2 = 5
+col2 = 10
 
 R_top   = 10
-R_bot   = 20
+R_bot   = 15
 R_cross = 10
 
 print("--------------------------------------------- ")
@@ -188,8 +188,11 @@ layer1 = [[Node() for i in range(col1)] for j in range(row1)]
 layer2 = [[Node() for i in range(col2)] for j in range(row2)]
 set_boundary(layer1,layer2)
 cross = find_cross_boundaries(row1, col1, row2, col2)
-final_resistance = resistance(10000, layer1, layer2, cross, R_top, R_bot, R_cross)
+print(cross)
+final_resistance, curA, curB = resistance(10000, layer1, layer2, cross, R_top, R_bot, R_cross)
 print("\nThe resistance of the network is %.5f Ohms."%final_resistance)
+print("I+ = ", curA)
+print("I- = ", curB)
 V1, V2 = np.empty((row1,col1)), np.empty((row2,col2))
 for i in range(row1):
     for j in range(col1):
@@ -206,10 +209,11 @@ X2 = [i for i in range(col1,col1+row2)]
 Y2 = [i for i in range(col2)]
 x2,y2 = np.meshgrid(X2,Y2)
 
-levels = np.arange(-0.005,1.015,0.005)+0.005
+levels = np.arange(-0.005,10.015,0.005)+0.005
 plt.contourf(x1,y1,V1,levels,alpha=0.8,cmap='twilight_shifted')
 plt.contourf(x2,y2,V2.T,levels,alpha=0.8,cmap='twilight_shifted')
 plt.colorbar()
 plt.axis('off')
 plt.title("Voltage Distribution")
-plt.savefig('Voltage_Distribution.png')
+plt.show()
+#plt.savefig('Voltage_Distribution.png')
