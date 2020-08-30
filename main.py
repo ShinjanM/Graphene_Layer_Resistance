@@ -182,7 +182,7 @@ col2 = 30
 
 R_top   = 10
 R_bot   = 12
-R_cross = 10
+R_cross = 15
 
 print("--------------------------------------------- ")
 print("| Layer 1: {} X {}".format(row1,col1))
