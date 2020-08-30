@@ -20,7 +20,6 @@ class Node:
 
 def set_boundary(grid1,grid2):
     grid1[8][0] = Node(10.0, Fixed.A)
-    grid2[3][0] = Node(0.0, Fixed.B)
     grid2[7][0] = Node(0.0, Fixed.B)
     grid1[3][34] = Node(0.0, Fixed.C)
     grid2[3][29] = Node(0.0, Fixed.D)

@@ -5,32 +5,36 @@
 | Convergence Threshold:  1e-08
 --------------------------------------------- 
 
-Step 1000 with convergence delta = 1.188250026823689
-Step 2000 with convergence delta = 0.4825936598925111
-Step 3000 with convergence delta = 0.19602777213682154
-Step 4000 with convergence delta = 0.07962577056847342
-Step 5000 with convergence delta = 0.03234369941661852
-Step 6000 with convergence delta = 0.013137893479502338
-Step 7000 with convergence delta = 0.005336564715606618
-Step 8000 with convergence delta = 0.002167693246086899
-Step 9000 with convergence delta = 0.0008805091402018794
-Step 10000 with convergence delta = 0.0003576596214777128
-Step 11000 with convergence delta = 0.000145280041997653
-Step 12000 with convergence delta = 5.901222651027993e-05
-Step 13000 with convergence delta = 2.3970552530006017e-05
-Step 14000 with convergence delta = 9.736751555466938e-06
-Step 15000 with convergence delta = 3.9550332102678e-06
-Step 16000 with convergence delta = 1.6065201570159005e-06
-Step 17000 with convergence delta = 6.525626572440046e-07
-Step 18000 with convergence delta = 2.6506857897512504e-07
-Step 19000 with convergence delta = 1.076699256419289e-07
-Step 20000 with convergence delta = 4.3735127630561976e-08
-Step 21000 with convergence delta = 1.7765013349269054e-08
-Step 21638 with convergence delta = 9.998664896038179e-09 has converged
+Step 1000 with convergence delta = 1.3753232155332706
+Step 2000 with convergence delta = 0.6312052886712475
+Step 3000 with convergence delta = 0.2897313055144455
+Step 4000 with convergence delta = 0.13299039042141714
+Step 5000 with convergence delta = 0.06104429728244298
+Step 6000 with convergence delta = 0.028020116482855073
+Step 7000 with convergence delta = 0.012861593345598443
+Step 8000 with convergence delta = 0.005903636535112611
+Step 9000 with convergence delta = 0.0027098449937699165
+Step 10000 with convergence delta = 0.001243853656380578
+Step 11000 with convergence delta = 0.0005709448038393461
+Step 12000 with convergence delta = 0.0002620709980079017
+Step 13000 with convergence delta = 0.00012029395399704157
+Step 14000 with convergence delta = 5.521646989525841e-05
+Step 15000 with convergence delta = 2.5345068888515954e-05
+Step 16000 with convergence delta = 1.1633712153846787e-05
+Step 17000 with convergence delta = 5.340023305544506e-06
+Step 18000 with convergence delta = 2.4511392544557253e-06
+Step 19000 with convergence delta = 1.1251043612325873e-06
+Step 20000 with convergence delta = 5.164374110577796e-07
+Step 21000 with convergence delta = 2.3705136920071368e-07
+Step 22000 with convergence delta = 1.0880962042492115e-07
+Step 23000 with convergence delta = 4.994503255417726e-08
+Step 24000 with convergence delta = 2.292538447967729e-08
+Step 25000 with convergence delta = 1.0523056870326286e-08
+Step 25066 with convergence delta = 9.995939853624236e-09 has converged
 
-The resistance of the network is 14.39644 Ohms.
-I+ =  0.3473080712416581
-I- =  -0.3473080693052887
-V+ =  3.6823538356119987
-V- =  4.220156198234534
-DUT Resistance =  -1.5484879481776588
+The resistance of the network is 16.26064 Ohms.
+I+ =  0.3074910087156585
+I- =  -0.30749100678758906
+V+ =  4.34189862257411
+V- =  4.851123525454889
+DUT Resistance =  -1.6560643675655133
