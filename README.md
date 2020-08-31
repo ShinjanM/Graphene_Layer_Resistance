@@ -16,7 +16,7 @@ The various input parameters are:
 **I+ position**:           *layer number* *row number* *column number*  
 **I- position**:           *layer number* *row number* *column number*  
 **V+ position**:           *layer number* *row number* *column number*    
-**V- position**:           *layer number* *row number* *column number* 
+**V- position**:           *layer number* *row number* *column number*   
 **Convergence**:           *Value of convergence threshold*  
 **Maximum Iterations**:    *Maxium number of iterations*  
 
