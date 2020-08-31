@@ -1,5 +1,6 @@
-# Graphene_Layer_Resistance
-Calculating resistance of bilayer grahene sheets aprroximating them as a coupled network of resistors.
+# 4 probe measurements in bilayer sheets
+
+Calculating resistance of bilayer systems aprroximating them as a coupled network of resistors. Each layer is assumed to have uniform values for the value of each resistor element.
 
 ## Input paramters
 The input paramters are specified in the file **input.dat**.
