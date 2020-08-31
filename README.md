@@ -8,9 +8,9 @@ The input paramters are specified in the file **input.dat**.
 
 The various input parameters are:
 
-**Layer 1 size**:          < number of rows in layer 1 >   < number of columns in layer 1 >    
-**Layer 2 size**:          < number of rows in layer 2 >   < number of columns in layer 2 >   
-**R_top**:                 Resistance in layer 1 (in Ohms)  
+**Layer 1 size**: * * *    < number of rows in layer 1 >   < number of columns in layer 1 >    
+**Layer 2 size**: * * *    < number of rows in layer 2 >   < number of columns in layer 2 >   
+**R_top**: * * * *    Resistance in layer 1 (in Ohms)  
 **R_bottom**:              Resistance in layer 2 (in Ohms)  
 **R_cross**:               Resistance in the cross sectional region (in Ohms)   
 **I+ position**:           < layer number >   < row number >   < column number >  
