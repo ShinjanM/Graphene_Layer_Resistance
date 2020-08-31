@@ -2,8 +2,9 @@ import numpy as np
 import matplotlib
 matplotlib.use('tkagg')
 import matplotlib.pyplot as plt
+from parse_input import parse
 
-CONVERGENCE_THRESHOLD = 1e-16
+#CONVERGENCE_THRESHOLD = 1e-8
 
 class Fixed:
     FREE = 0
@@ -18,11 +19,23 @@ class Node:
         self.voltage = v
         self.fixed = f
 
-def set_boundary(grid1,grid2):
-    grid1[8][0] = Node(10.0, Fixed.A)
-    grid2[7][0] = Node(0.0, Fixed.B)
-    grid1[9][6] = Node(0.0, Fixed.C)
-    grid2[0][4] = Node(0.0, Fixed.D)
+def set_boundary(grid1,grid2,Ip_layer,Ip_pos1,Ip_pos2,Im_layer,Im_pos1, Im_pos2, Vp_layer, Vp_pos1, Vp_pos2, Vm_layer, Vm_pos1, Vm_pos2):
+    if Ip_layer==1:
+        grid1[Ip_pos1][Ip_pos2] = Node(10.0, Fixed.A)
+    else:
+        grid2[Ip_pos1][Ip_pos2] = Node(10.0, Fixed.A)
+    if Im_layer==1:
+        grid1[Im_pos1][Im_pos2] = Node(0.0, Fixed.B)
+    else:
+        grid2[Im_pos1][Im_pos2] = Node(0.0, Fixed.B)
+    if Vp_layer==1:
+        grid1[Vp_pos1][Vp_pos2] = Node(0.0, Fixed.C)
+    else:
+        grid2[Vp_pos1][Vp_pos2] = Node(0.0, Fixed.C)
+    if Vm_layer==1:
+        grid1[Vm_pos1][Vm_pos2] = Node(0.0, Fixed.D)
+    else:
+        grid2[Vm_pos1][Vm_pos2] = Node(0.0, Fixed.D)
 
 
 def find_cross_boundaries(row1, col1, row2, col2):
@@ -117,9 +130,6 @@ def current_grid(grid1,grid2,cross_boundary,R_bot,R_top,R_cross):
             if n<col1-1: current1[m][n] += (grid1[m][n].voltage - grid1[m][n+1].voltage)/R_top
             if ((n>=cross_boundary[0]) and (n<=cross_boundary[1])):
                 current1[m][n] += (grid1[m][n].voltage - grid2[n-cross_boundary[0]][cross_boundary[3]-m].voltage)/R_cross
-#    plt.matshow(current1, interpolation='spline36',cmap='inferno')
-#    plt.colorbar()
-#    plt.show()
     for m in range(row2):
         for n in range(col2):
             if m!=0: current2[m][n] += (grid2[m][n].voltage - grid2[m-1][n].voltage)/R_bot
@@ -128,9 +138,6 @@ def current_grid(grid1,grid2,cross_boundary,R_bot,R_top,R_cross):
             if n<col2-1: current2[m][n] += (grid2[m][n].voltage - grid2[m][n+1].voltage)/R_bot
             if ((n>=cross_boundary[2]) and (n<=cross_boundary[3])):
                 current2[m][n] += (grid2[m][n].voltage - grid1[cross_boundary[3]-n][cross_boundary[0]+m].voltage)/R_cross
-#    plt.matshow(current2.T,interpolation='spline36', cmap='inferno',origin='lower')
-#    plt.colorbar()
-#    plt.show()
     return current1, current2
 
 def iterations(number_of_iterations, grid1, grid2, cross_boundary, R_top, R_bot, R_cross):
@@ -175,60 +182,95 @@ def resistance(num_iter, grid1, grid2, cross, R_top, R_bot, R_cross):
     return res, curA, curB, volC, volD
 
 
-row1 = 10
-col1 = 35
-row2 = 18
-col2 = 30
+#row1 = 10
+#col1 = 35
+#row2 = 18
+#col2 = 30
 
-R_top   = 10
-R_bot   = 12
-R_cross = 15
+#R_top   = 10
+#R_bot   = 12
+    
 
-print("--------------------------------------------- ")
-print("| Layer 1: {} X {}".format(row1,col1))
-print("| Layer 2: {} X {}".format(row2,col2))
-print("| R_top: {} Ohms \t R_bot: {} Ohms \t R_cross: {} Ohms".format(R_top,R_bot,R_cross))
-print("| Convergence Threshold: ", CONVERGENCE_THRESHOLD)
-print("--------------------------------------------- \n")
-layer1 = [[Node() for i in range(col1)] for j in range(row1)]
-layer2 = [[Node() for i in range(col2)] for j in range(row2)]
-set_boundary(layer1,layer2)
-cross = find_cross_boundaries(row1, col1, row2, col2)
+#I =  [1,3,5,7,8,10,12,14,16,18,20,22,24,26,28,30]
 
-final_resistance, curA, curB, Vplus, Vminus = resistance(500000, layer1, layer2, cross, R_top, R_bot, R_cross)
+row1, col1, row2, col2, R_top, R_bot, R_cross_range, Ip_layer, Ip_pos1, Ip_pos2, Im_layer, Im_pos1, Im_pos2, Vp_layer, Vp_pos1, Vp_pos2, Vm_layer, Vm_pos1, Vm_pos2, CONVERGENCE_THRESHOLD, max_iter = parse('input.dat')
 
-print("\nThe resistance of the network is %.5f Ohms."%final_resistance)
-print("I+ = ", curA)
-print("I- = ", curB)
-print("V+ = ", Vplus)
-print("V- = ", Vminus)
-print("DUT Resistance = ", (Vplus-Vminus)/curA)
 
-V1, V2 = np.empty((row1,col1)), np.empty((row2,col2))
-for i in range(row1):
-    for j in range(col1):
-        V1[i][j] = layer1[i][j].voltage
-for i in range(row2):
-    for j in range(col2):
-        V2[i][j] = layer2[i][j].voltage
 
-X1 = [i for i in range(col1)]
-Y1 = [i for i in range((col2-row1)//2+row1,(col2-row1)//2,-1)]
-x1,y1 = np.meshgrid(X1,Y1)
-spacing = 10
-X2 = [i for i in range(col1+spacing,col1+row2+spacing)]
-Y2 = [i for i in range(col2)]
-x2,y2 = np.meshgrid(X2,Y2)
+for res in R_cross_range:
+    R_cross = res
 
-levels = np.arange(-0.005,10.015,0.005)+0.005
-plt.contourf(x1,y1,V1,levels,alpha=0.8,cmap='twilight_shifted')
-plt.contourf(x2,y2,V2.T,levels,alpha=0.8,cmap='twilight_shifted')
-plt.colorbar()
-plt.axis('off')
-plt.text(-5.3, 16.5, r'I$^+$', fontsize=25)
-plt.text(46.5, -2.5, r'I$^-$', fontsize=25)
-plt.text(5.5,8,r'V$^+$', fontsize=25)
-plt.text(36, 4, r'V$^-$', fontsize=25)
-#plt.title("Voltage Distribution")
-#plt.show()
-plt.savefig('Voltage_Distribution_quasi4.png')
+    print("--------------------------------------------- ")
+    print("| Layer 1: {} X {}".format(row1,col1))
+    print("| Layer 2: {} X {}".format(row2,col2))
+    print("| R_top: {} Ohms \t R_bot: {} Ohms \t R_cross: {} Ohms".format(R_top,R_bot,R_cross))
+    print("| Convergence Threshold: ", CONVERGENCE_THRESHOLD)
+    print("--------------------------------------------- \n")
+    
+    layer1 = [[Node() for i in range(col1)] for j in range(row1)]
+    layer2 = [[Node() for i in range(col2)] for j in range(row2)]
+    set_boundary(layer1,layer2,Ip_layer, Ip_pos1, Ip_pos2, Im_layer, Im_pos1, Im_pos2, Vp_layer, Vp_pos1, Vp_pos2, Vm_layer, Vm_pos1, Vm_pos2)
+    cross = find_cross_boundaries(row1, col1, row2, col2)
+
+    final_resistance, curA, curB, Vplus, Vminus = resistance(max_iter, layer1, layer2, cross, R_top, R_bot, R_cross)
+
+    print("\nThe resistance of the network is %.5f Ohms."%final_resistance)
+    print("I+ = ", curA)
+    print("I- = ", curB)
+    print("V+ = ", Vplus)
+    print("V- = ", Vminus)
+    print("DUT Resistance = ", (Vplus-Vminus)/curA)
+
+    f = 'Results.txt'
+    fil = open(f,'a+')
+    fil.writelines("\n%0.2f\t%0.2f\t%0.2f\t%0.8f\t%0.8f\t%0.8f\t%0.8f\t%0.8f\t%02d %02d %02d \t%02d %02d %02d \t%02d %02d %02d \t%02d %02d %02d"%(R_top,R_bot,R_cross,curA,curB,Vplus,Vminus,(Vplus-Vminus)/curA, Ip_layer, Ip_pos1, Ip_pos2, Im_layer, Im_pos1, Im_pos2, Vp_layer, Vp_pos1, Vp_pos2, Vm_layer, Vm_pos1, Vm_pos2))
+    fil.close()
+
+    V1, V2 = np.empty((row1,col1)), np.empty((row2,col2))
+    for i in range(row1):
+        for j in range(col1):
+            V1[i][j] = layer1[i][j].voltage
+    for i in range(row2):
+        for j in range(col2):
+            V2[i][j] = layer2[i][j].voltage
+
+    X1 = [i for i in range(col1)]
+    Y1 = [i for i in range((col2-row1)//2+row1,(col2-row1)//2,-1)]
+    x1,y1 = np.meshgrid(X1,Y1)
+    spacing = 10
+    X2 = [i for i in range(col1+spacing,col1+row2+spacing)]
+    Y2 = [i for i in range(col2)]
+    x2,y2 = np.meshgrid(X2,Y2)
+
+    levels = np.arange(-0.015,10.015,0.005)+0.005
+    #if Ip_layer==1:
+    #    plt.text(Ip_pos2-8,(col2-row1)//2+row1-Ip_pos1,r'I$^+$',fontsize=25)
+    #else:
+    #    plt.text(Ip_pos1+spacing+col1-1.5,Ip_pos2-3,r'I$^+$',fontsize=25)
+    
+    #if Im_layer==1:
+    #    plt.text(Im_pos2-8,(col2-row1)//2+row1-Im_pos1,r'I$^-$',fontsize=25)
+    #else:
+    #    plt.text(Im_pos1+spacing+col1-1.5,Im_pos2-3,r'I$^-$',fontsize=25)
+
+    if Vp_layer==1:
+        plt.text(Vp_pos2,(col2-row1)//2+row1-Vp_pos1,r'V$^+$', fontsize=25)
+        plt.plot(Vp_pos2,(col2-row1)//2+row1-Vp_pos1,'ro',c='k')
+    else:
+        plt.text(Vp_pos1+spacing+col1,Vp_pos2,r'V$^+$', fontsize=25)
+        plt.plot(Vp_pos1+spacing+col1,Vp_pos2,'ro',c='k')
+
+    if Vm_layer==1:
+        plt.text(Vm_pos2,(col2-row1)//2+row1-Vm_pos1,r'V$^-$', fontsize=25)
+        plt.plot(Vm_pos2,(col2-row1)//2+row1-Vm_pos1,'ro',c='k')
+    else:
+        plt.text(Vm_pos1+spacing+col1,Vm_pos2,r'V$^-$',fontsize=25)
+        plt.plot(Vm_pos1+spacing+col1,Vm_pos2,'ro',c='k')
+    plt.contourf(x1,y1,V1,levels,alpha=0.8,cmap='twilight_shifted')
+    plt.contourf(x2,y2,V2.T,levels,alpha=0.8,cmap='twilight_shifted')
+    plt.colorbar()
+    plt.axis('off')
+    plt.ylim(-10,col2+1)
+    plt.xlim(-10,col1+row2+spacing+5)
+    plt.savefig('RCross_%02d.png'%(R_cross),figsize=(6,6),dpi=300)
+    plt.clf()

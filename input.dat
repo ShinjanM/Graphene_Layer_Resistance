@@ -1,0 +1,17 @@
+Input parameters for Calculating Resistance
+-------------------------------------------
+
+Layer 1 size  10 35
+Layer 2 size  18 30
+
+R_top     100
+R_bottom  150
+R_cross   25 
+
+I+ position   1   6   0
+I- position   2   7   0
+V+ position   1   9   15
+V- position   2   17  12
+
+Convergence   1e-6
+Maximum Iterations  50000
