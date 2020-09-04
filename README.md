@@ -1,4 +1,4 @@
-# 4 probe measurements in bilayer sheets
+# Four probe measurements in bilayer sheets
 
 Calculating resistance of bilayer systems aprroximating them as a coupled network of resistors. Each layer is assumed to have uniform values for the value of each resistor element. The network and the four probes are as follows:
 
