@@ -12,8 +12,8 @@ class Node:
         self.fixed = f
  
 def set_boundary(m):
-    m[0][0] = Node( 1.0, Fixed.A)
-    m[49][49] = Node(-1.0, Fixed.B)
+    m[3][4] = Node( 1.0, Fixed.A)
+    m[6][7] = Node(-1.0, Fixed.B)
  
 def calc_difference(m, d):
     h = len(m)
@@ -57,8 +57,8 @@ def iter(m):
     return (cur[Fixed.A] - cur[Fixed.B])/2.0
  
 def main():
-    w = 50
-    h = 50
+    w = 10
+    h = 10
     mesh = [[Node() for j in range(w)] for i in range(h)]
     print("R = %.16f" % (2 / iter(mesh)))
  

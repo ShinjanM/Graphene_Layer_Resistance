@@ -39,5 +39,7 @@ def parse(fil):
             convergence = eval(lines[i].split()[1])
         if "Maximum Iterations" in lines[i]:
             max_iter = eval(lines[i].split()[2])
-    return row1, col1, row2, col2, R_top, R_bot, R_cross, Ip_layer, Ip_pos1, Ip_pos2, Im_layer, Im_pos1, Im_pos2, Vp_layer, Vp_pos1, Vp_pos2, Vm_layer, Vm_pos1, Vm_pos2, convergence, max_iter
+        if "Append" in lines[i]:
+            append = lines[i].split()[1]
+    return row1, col1, row2, col2, R_top, R_bot, R_cross, Ip_layer, Ip_pos1, Ip_pos2, Im_layer, Im_pos1, Im_pos2, Vp_layer, Vp_pos1, Vp_pos2, Vm_layer, Vm_pos1, Vm_pos2, convergence, max_iter, append
 

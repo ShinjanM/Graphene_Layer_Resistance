@@ -182,8 +182,9 @@ def resistance(num_iter, grid1, grid2, cross, R_top, R_bot, R_cross):
     return res, curA, curB, volC, volD
 
 
-row1, col1, row2, col2, R_top, R_bot, R_cross_range, Ip_layer, Ip_pos1, Ip_pos2, Im_layer, Im_pos1, Im_pos2, Vp_layer, Vp_pos1, Vp_pos2, Vm_layer, Vm_pos1, Vm_pos2, CONVERGENCE_THRESHOLD, max_iter, append = parse('input.dat')
+row1, col1, row2, col2, R_top, R_bot, R_cross_range, Ip_layer, Ip_pos1, Ip_pos2, Im_layer, Im_pos1, Im_pos2, Vp_layer, Vp_pos1, Vp_pos2, Vm_layer, Vm_pos1, Vm_pos2, CONVERGENCE_THRESHOLD, max_iter = parse('input.dat')
 
+append = '_run1'
 
 for res in R_cross_range:
     R_cross = res
@@ -196,7 +197,13 @@ for res in R_cross_range:
     print("--------------------------------------------- \n")
     
     layer1 = [[Node() for i in range(col1)] for j in range(row1)]
+    for i in range(row1):
+        for j in range(col1):
+            layer1[i][j].voltage = V1[i][j]
     layer2 = [[Node() for i in range(col2)] for j in range(row2)]
+    for i in range(row2):
+        for j in range(col2):
+            layer2[i][j].voltage = V2[i][j]
     set_boundary(layer1,layer2,Ip_layer, Ip_pos1, Ip_pos2, Im_layer, Im_pos1, Im_pos2, Vp_layer, Vp_pos1, Vp_pos2, Vm_layer, Vm_pos1, Vm_pos2)
     cross = find_cross_boundaries(row1, col1, row2, col2)
 
