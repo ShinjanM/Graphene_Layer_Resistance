@@ -182,9 +182,7 @@ def resistance(num_iter, grid1, grid2, cross, R_top, R_bot, R_cross):
     return res, curA, curB, volC, volD
 
 
-row1, col1, row2, col2, R_top, R_bot, R_cross_range, Ip_layer, Ip_pos1, Ip_pos2, Im_layer, Im_pos1, Im_pos2, Vp_layer, Vp_pos1, Vp_pos2, Vm_layer, Vm_pos1, Vm_pos2, CONVERGENCE_THRESHOLD, max_iter = parse('input.dat')
-
-append = '_run1'
+row1, col1, row2, col2, R_top, R_bot, R_cross_range, Ip_layer, Ip_pos1, Ip_pos2, Im_layer, Im_pos1, Im_pos2, Vp_layer, Vp_pos1, Vp_pos2, Vm_layer, Vm_pos1, Vm_pos2, CONVERGENCE_THRESHOLD, max_iter, append = parse('input.dat')
 
 for res in R_cross_range:
     R_cross = res
@@ -195,17 +193,22 @@ for res in R_cross_range:
     print("| R_top: {} Ohms \t R_bot: {} Ohms \t R_cross: {} Ohms".format(R_top,R_bot,R_cross))
     print("| Convergence Threshold: ", CONVERGENCE_THRESHOLD)
     print("--------------------------------------------- \n")
+    V1 = np.loadtxt('V1_%03d'%R_cross+append+'_restart.txt')
+    V2 = np.loadtxt('V2_%03d'%R_cross+append+'_restart.txt') 
     
     layer1 = [[Node() for i in range(col1)] for j in range(row1)]
+    layer2 = [[Node() for i in range(col2)] for j in range(row2)]
+    
+    set_boundary(layer1,layer2,Ip_layer, Ip_pos1, Ip_pos2, Im_layer, Im_pos1, Im_pos2, Vp_layer, Vp_pos1, Vp_pos2, Vm_layer, Vm_pos1, Vm_pos2)
+    
+    cross = find_cross_boundaries(row1, col1, row2, col2)
+    
     for i in range(row1):
         for j in range(col1):
             layer1[i][j].voltage = V1[i][j]
-    layer2 = [[Node() for i in range(col2)] for j in range(row2)]
     for i in range(row2):
         for j in range(col2):
             layer2[i][j].voltage = V2[i][j]
-    set_boundary(layer1,layer2,Ip_layer, Ip_pos1, Ip_pos2, Im_layer, Im_pos1, Im_pos2, Vp_layer, Vp_pos1, Vp_pos2, Vm_layer, Vm_pos1, Vm_pos2)
-    cross = find_cross_boundaries(row1, col1, row2, col2)
 
     final_resistance, curA, curB, Vplus, Vminus = resistance(max_iter, layer1, layer2, cross, R_top, R_bot, R_cross)
 
@@ -225,8 +228,8 @@ for res in R_cross_range:
     for i in range(row1):
         for j in range(col1):
             V1[i][j] = layer1[i][j].voltage
-    np.savetxt('V1_%03d'%R_cross + append + '.txt', V1)
+    np.savetxt('V1_%03d'%R_cross + append + '_restart.txt', V1)
     for i in range(row2):
         for j in range(col2):
             V2[i][j] = layer2[i][j].voltage
-    np.savetxt('V2_%03d'%R_cross + append + '.txt', V2)
+    np.savetxt('V2_%03d'%R_cross + append + '_restart.txt', V2)

@@ -10,10 +10,10 @@ R_cross   2000
 
 I+ position   1   13   0
 I- position   2   24   0
-V+ position   1   12  59
-V- position   2   15  79
+V+ position   1   4   59
+V- position   2   20  79
 
-Convergence   1e-7
+Convergence   1e-10
 Maximum Iterations  1000000
 
-Append	     _run1 
+Append	     _run3 
