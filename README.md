@@ -18,7 +18,7 @@ The various input parameters are:
         V- position           <layer number>   <row number>   <column number> 
         Convergence           <Value of convergence threshold>  
         Maximum Iterations    <Maxium number of iterations>  
-
+	Append		      The string you want to append to the output files
 *Note that if you are scanning over a series of R_cross you can enter all the values seperated by spaces*
 
 ## Running the Code
