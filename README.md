@@ -2,7 +2,7 @@
 
 Calculating resistance of bilayer systems aprroximating them as a coupled network of resistors. Each layer is assumed to have uniform values for the value of each resistor element. The network and the four probes are as follows:
 
-  ![Schematic for the calculation](/master/Schematic.png)
+  ![Schematic](https://github.com/ShinjanM/Graphene_Layer_Resistance/blob/master/Schematic.png?raw=true)
 
 We try to look at the effect on the DUT resistance by varying the various paramters in the system.
 
