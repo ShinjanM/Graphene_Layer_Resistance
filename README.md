@@ -1,6 +1,9 @@
 # 4 probe measurements in bilayer sheets
 
-Calculating resistance of bilayer systems aprroximating them as a coupled network of resistors. Each layer is assumed to have uniform values for the value of each resistor element.
+Calculating resistance of bilayer systems aprroximating them as a coupled network of resistors. Each layer is assumed to have uniform values for the value of each resistor element. The schematic of the grid and the four probes are as follows:
+
+  ![Schematic for the calculation](https://raw.githubusercontent.com/ShinjanM/Graphene_Layer_Resistance/master/Schematic.png)
+
 
 ## Input paramters
 The input paramters are specified in the file **input.dat**.
