@@ -6,14 +6,14 @@ Layer 2 size  25 80
 
 R_top     1000
 R_bottom  1200
-R_cross   2000 
+R_cross   5000 7000 10000
 
 I+ position   1   13   0
 I- position   2   24   0
-V+ position   1   4   59
-V- position   2   20  79
+V+ position   1   10  59
+V- position   2   12  79
 
 Convergence   1e-10
 Maximum Iterations  1000000
 
-Append	     _run3 
+Append	     _run4 

@@ -186,7 +186,7 @@ row1, col1, row2, col2, R_top, R_bot, R_cross_range, Ip_layer, Ip_pos1, Ip_pos2,
 
 for res in R_cross_range:
     R_cross = res
-
+ 
     print("--------------------------------------------- ")
     print("| Layer 1: {} X {}".format(row1,col1))
     print("| Layer 2: {} X {}".format(row2,col2))
@@ -228,8 +228,8 @@ for res in R_cross_range:
     for i in range(row1):
         for j in range(col1):
             V1[i][j] = layer1[i][j].voltage
-    np.savetxt('V1_%03d'%R_cross + append + '_restart.txt', V1)
+    np.savetxt('V1_%03d'%R_cross + append + '_restart_fin.txt', V1)
     for i in range(row2):
         for j in range(col2):
             V2[i][j] = layer2[i][j].voltage
-    np.savetxt('V2_%03d'%R_cross + append + '_restart.txt', V2)
+    np.savetxt('V2_%03d'%R_cross + append + '_restart_fin.txt', V2)
