@@ -33,3 +33,12 @@ After specifying the input parameters run
 	python plot_planes.py
 ```     
 The final voltage distribution will be saved as an image and the Results.txt will contain all the necessary probe data.
+
+
+## Reference
+
+Misorientation-Controlled Cross-Plane Thermoelectricity in Twisted Bilayer Graphene
+
+Phanibhusan S. Mahapatra, Bhaskar Ghawri, Manjari Garg, Shinjan Mandal, K. Watanabe, T. Taniguchi, Manish Jain, Subroto Mukerjee, and Arindam Ghosh
+
+Phys. Rev. Lett. 125, 226802 – Published 24 November 2020
